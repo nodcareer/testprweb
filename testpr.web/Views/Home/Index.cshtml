@@ -1,8 +1,127 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "File Manager";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <h1>Azure Blob Storage File Manager</h1>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (ViewData.ModelState["file"] != null && ViewData.ModelState["file"].Errors.Count > 0)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @foreach (var error in ViewData.ModelState["file"].Errors)
+            {
+                <p>@error.ErrorMessage</p>
+            }
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- File Upload Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Upload File</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action='@Url.Action("UploadFile", "Home")' enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="file" class="form-label">Select File:</label>
+                    <input type="file" class="form-control" id="file" name="file" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-cloud-upload"></i> Upload File
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Files List -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Files in Container (@(Model?.Count ?? 0))</h5>
+        </div>
+        <div class="card-body">
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Filename</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var blob in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-file"></i>
+                                        @blob
+                                    </td>
+                                    <td class="text-end">
+                                        <form method="post" action='@Url.Action("DeleteFile", "Home")' style="display: inline;">
+                                            <input type="hidden" name="fileName" value="@blob">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete @blob?');">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle"></i> No files in container yet. Upload your first file above!
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+<style>
+    .container {
+        max-width: 900px;
+    }
+
+    h1 {
+        color: #0078d4;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary, .bg-primary {
+        background-color: #0078d4 !important;
+        border-color: #0078d4 !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #005a9e !important;
+    }
+</style>
