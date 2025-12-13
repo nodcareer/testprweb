@@ -1,0 +1,114 @@
+@model testpr.web.Domain.Order.Order
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="mb-4">Create New Order</h1>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Please fix the following errors:</h4>
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            @foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+
+            <form method="post" action='@Url.Action("Create", "Order")' class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label for="CustomerName" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="CustomerName" name="CustomerName" 
+                           value="@Model?.CustomerName" required>
+                    <div class="invalid-feedback">
+                        Customer name is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ProductName" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="ProductName" name="ProductName" 
+                           value="@Model?.ProductName" required>
+                    <div class="invalid-feedback">
+                        Product name is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Total" class="form-label">Total Amount ($)</label>
+                    <input type="number" class="form-control" id="Total" name="Total" 
+                           value="@Model?.Total" step="0.01" min="0" required>
+                    <div class="invalid-feedback">
+                        Please enter a valid total amount.
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-circle"></i> Create Order
+                    </button>
+                    <a href="@Url.Action("Index", "Order")" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+<style>
+    .container {
+        max-width: 600px;
+    }
+
+    h1 {
+        color: #0078d4;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .form-control:focus {
+        border-color: #0078d4;
+        box-shadow: 0 0 0 0.2rem rgba(0, 120, 212, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #0078d4;
+        border-color: #0078d4;
+    }
+
+    .btn-primary:hover {
+        background-color: #005a9e;
+        border-color: #005a9e;
+    }
+</style>

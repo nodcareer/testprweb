@@ -1,3 +1,14 @@
   "ConnectionStrings": {
-    "AzureBlobStorage": "DefaultEndpointsProtocol=https;AccountName=nagstaweb01;AccountKey="
+    "AzureBlobStorage": ""
+    "AzureStorageQueue":""
+    "AzureSqlDatabase": ""
+  
   }
+
+ # ef tool
+ dotnet tool install --global dotnet-ef
+
+  # run migrations: 
+  dotnet ef migrations add InitialCreate 
+  dotnet ef database update
+

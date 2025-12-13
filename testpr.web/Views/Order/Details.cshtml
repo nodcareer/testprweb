@@ -1,0 +1,100 @@
+@model testpr.web.Domain.Order.Order
+
+@{
+    ViewData["Title"] = $"Order #{Model?.Id}";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>Order Details</h1>
+
+            @if (Model != null)
+            {
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order #@Model.Id</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Customer Name</h6>
+                                <p class="lead">@Model.CustomerName</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Product Name</h6>
+                                <p class="lead">@Model.ProductName</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Total Amount</h6>
+                                <p class="lead"><strong>$@Model.Total.ToString("F2")</strong></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Status</h6>
+                                <p>
+                                    @if (Model.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark" style="font-size: 1rem;">@Model.Status</span>
+                                    }
+                                    else if (Model.Status == "Processing")
+                                    {
+                                        <span class="badge bg-info" style="font-size: 1rem;">@Model.Status</span>
+                                    }
+                                    else if (Model.Status == "Completed")
+                                    {
+                                        <span class="badge bg-success" style="font-size: 1rem;">@Model.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger" style="font-size: 1rem;">@Model.Status</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Created At</h6>
+                                <p>@Model.CreatedAt.ToString("g")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Updated At</h6>
+                                <p>@(Model.UpdatedAt?.ToString("g") ?? "Not updated yet")</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="@Url.Action("Index", "Order")" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Orders
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    Order not found.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 900px;
+    }
+
+    h1 {
+        color: #0078d4;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
